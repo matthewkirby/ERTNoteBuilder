@@ -1,0 +1,11 @@
+
+.playerBox {
+  font-weight: 600;
+  margin: 0;
+  padding: 0.25em 1em;
+  user-select: none;
+}
+
+.playerBox:hover {
+  background-color: #202020;
+}

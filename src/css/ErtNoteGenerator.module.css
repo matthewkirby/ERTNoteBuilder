@@ -1,0 +1,13 @@
+.ertNoteGenerator {
+  margin: 2em;
+  display: flex;
+  flex-direction: row;
+  border: 1px grey solid;
+}
+
+.raiderList {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  border-right: 1px grey solid;
+}
