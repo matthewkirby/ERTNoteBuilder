@@ -11,27 +11,26 @@ const NotePreview = ({ contents }) => {
 
   return (
     <div className={styles.notePreview}>
-      <NoteRow
-        row={contents}
-      />
+      {contents.map((row, i) => {
+        return <NoteRow row={row} rowNumber={i} key={i} />;
+      })}
     </div>
   );
 
 
 };
 
-const NoteRow = ({ row }) => {
+const NoteRow = ({ row, rowNumber }) => {
 
   return (
-
     <div className={styles.row}>
-      <div className={styles.rowHeader}>1</div>
+      <div className={styles.rowHeader}>{rowNumber+1}</div>
       <div className={styles.rowPreview}>
         {row.map((entry, i) => {
           if (entry.type === "player") {
             return <Player playerInfo={entry} key={i} />
           } else {
-            return <></>;
+            return "";
           }
         })}
       </div>

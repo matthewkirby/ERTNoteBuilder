@@ -1,9 +1,15 @@
 .ertNoteGenerator {
   margin: 2em;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   border: 1px grey solid;
   min-width: 800px;
+}
+
+.primaryNoteGenerator {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px grey solid;
 }
 
 .raiderList {

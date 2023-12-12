@@ -2,6 +2,7 @@ import styles from "./css/ErtNoteGenerator.module.css";
 import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
+import CommandCenter from "./components/CommandCenter";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -37,17 +38,33 @@ const playerList = [
 
 const ErtNoteGenerator = () => {
 
-  const [noteBody, setNoteBody] = useState(null);
+  const [noteBody, setNoteBody] = useState([[]]);
+
+  // Cursor represents where we are inserting things
+  // null: everything appended to the end of the note
+  // number (0, 1, 2, etc): a row is selected. Append cells to the end of the row. Lines added
+  //    above/below as chosen in command center
+  // pair (e.g. [0,3]): a cell is selected. First number is row, second number is cell. The row header is 0,0
+  //    and 0,1 is the first entry in a row. Cells should be added after the selected cell and the cursor
+  //    should update to the newly added cell. A row can be added above or below according to command center
+  const [cursor, setCursor] = useState(null)
 
 
 
   const addElementToNote = (player) => {
     let newNote = undefined;
     if (noteBody === null) {
-      newNote = [player];
+      newNote = [[player]];
     } else {
-      newNote = [...noteBody, player];
+      const lastRow = noteBody[noteBody.length - 1];
+      newNote = [...noteBody];
+      newNote[noteBody.length - 1] = [...lastRow, player]
     }
+    setNoteBody(newNote);
+  }
+
+  const insertNewRow = () => {
+    const newNote = [...noteBody, []];
     setNoteBody(newNote);
   }
 
@@ -56,14 +73,20 @@ const ErtNoteGenerator = () => {
 
   return (
     <div className={styles.ertNoteGenerator}>
-      <div className={styles.raiderList}>
-        <PlayerList role="dps" playerList={playerList} addElementToNote={addElementToNote} />
-        <PlayerList role="tank" playerList={playerList} addElementToNote={addElementToNote} />
-        <PlayerList role="healer" playerList={playerList} addElementToNote={addElementToNote} />
+      <div className={styles.primaryNoteGenerator}>
+        <div className={styles.raiderList}>
+          <PlayerList role="dps" playerList={playerList} addElementToNote={addElementToNote} />
+          <PlayerList role="tank" playerList={playerList} addElementToNote={addElementToNote} />
+          <PlayerList role="healer" playerList={playerList} addElementToNote={addElementToNote} />
+        </div>
+
+        <NotePreview
+          contents={noteBody}
+        />
       </div>
 
-      <NotePreview
-        contents={noteBody}
+      <CommandCenter
+        insertNewRow={insertNewRow}
       />
     </div>
   );

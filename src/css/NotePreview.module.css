@@ -12,6 +12,7 @@
 
 .rowHeader {
   flex: 0 0 1.5em;
+  padding: 0.25em 0;
   margin: auto;
   text-align: center;
   color: #707070;

@@ -1,0 +1,21 @@
+.commandCenter {
+  display: flex;
+  flex-direction: row;
+}
+
+.command {
+  margin: 0.5em 1em;
+  padding: 0.75em 1em;
+  border: 1px black solid;
+  border-radius: 10px;
+  background-color: #202020;
+  user-select: none;
+}
+
+.command:hover {
+  background-color: #2d2d2d;
+}
+
+.flushRight {
+  margin-left: auto;
+}
