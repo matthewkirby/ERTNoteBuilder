@@ -4,8 +4,10 @@ import Player from "./Player";
 
 const NotePreview = ({ contents }) => {
 
+  console.log(contents)
 
-  if (contents === null) { return <div className={styles.notePreview}>Get Started</div>}
+
+  if (contents === null) { return <div className={styles.notePreview} style={{padding:"1em"}}>Get Started</div>}
 
   return (
     <div className={styles.notePreview}>
@@ -21,15 +23,19 @@ const NotePreview = ({ contents }) => {
 const NoteRow = ({ row }) => {
 
   return (
-    <>
-      {row.map((entry, i) => {
-        if (entry.type === "player") {
-          return <Player playerInfo={entry} key={i} />
-        } else {
-          return <></>;
-        }
-      })}
-    </>
+
+    <div className={styles.row}>
+      <div className={styles.rowHeader}>1</div>
+      <div className={styles.rowPreview}>
+        {row.map((entry, i) => {
+          if (entry.type === "player") {
+            return <Player playerInfo={entry} key={i} />
+          } else {
+            return <></>;
+          }
+        })}
+      </div>
+    </div>
   );
 
 };
