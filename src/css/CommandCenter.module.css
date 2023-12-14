@@ -1,10 +1,25 @@
 .commandCenter {
   display: flex;
   flex-direction: row;
+  column-gap: 1em;
+  padding: 1em;
+}
+
+.commandIcon {
+  height: 3em;
+  border: solid rgba(0,0,0,0) 1px;
+}
+
+.delete {
+  color: #a81928;
+}
+
+.delete:hover {
+  margin: 5px 0 -5px 0;
+  color: #e8152a;
 }
 
 .command {
-  margin: 0.5em 1em;
   padding: 0.75em 1em;
   border: 1px black solid;
   border-radius: 10px;
