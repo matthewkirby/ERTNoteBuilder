@@ -45,20 +45,47 @@ const ErtNoteGenerator = () => {
   // number (0, 1, 2, etc): a row is selected. Append cells to the end of the row. Lines added
   //    above/below as chosen in command center
   // pair (e.g. [0,3]): a cell is selected. First number is row, second number is cell. The row header is 0,0
-  //    and 0,1 is the first entry in a row. Cells should be added after the selected cell and the cursor
-  //    should update to the newly added cell. A row can be added above or below according to command center
+  //    and 0,1 is the first entry in a row. Replaces the selected cell.
+  //    A row can be added above or below according to command center
   const [cursor, setCursor] = useState(null)
 
 
 
   const addElementToNote = (player) => {
-    let newNote = undefined;
     if (noteBody === null) {
-      newNote = [[player]];
-    } else {
+      setNoteBody([[player]]);
+      return;
+    }
+
+    let newNote = undefined;
+    // If cursor is not defined, add to the end of last line
+    if (cursor === null) {
       const lastRow = noteBody[noteBody.length - 1];
       newNote = [...noteBody];
       newNote[noteBody.length - 1] = [...lastRow, player]
+    }
+    // If cursor on a row, add to the end of that row
+    else if (typeof cursor === 'number') {
+      if (cursor > noteBody.length - 1 || cursor < 0) {
+        setCursor(null);
+        return;
+      }
+      const selectedRow = noteBody[cursor];
+      newNote = [...noteBody];
+      newNote[cursor] = [...selectedRow, player];
+    }
+    // If cursor is on a cell, replace that cell
+    else if (Array.isArray(cursor)) {
+      const [row, cell] = cursor;
+      if (row > noteBody.length - 1 || row < 0 || cell < 0 || cell > noteBody[row].length) {
+        setCursor(null);
+        return;
+      }
+
+      let newRow = [...noteBody[row]];
+      newNote = [...noteBody];
+      newRow[cell-1] = player;
+      newNote[row] = newRow;
     }
     setNoteBody(newNote);
   }
@@ -67,9 +94,6 @@ const ErtNoteGenerator = () => {
     const newNote = [...noteBody, []];
     setNoteBody(newNote);
   }
-
-
-
 
   return (
     <div className={styles.ertNoteGenerator}>
@@ -82,6 +106,8 @@ const ErtNoteGenerator = () => {
 
         <NotePreview
           contents={noteBody}
+          cursor={cursor}
+          setCursor={setCursor}
         />
       </div>
 

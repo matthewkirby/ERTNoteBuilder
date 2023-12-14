@@ -28,3 +28,7 @@ code {
 .shaman { color: #0070DD; }
 .warlock { color: #8788EE; }
 .warrior { color: #C69B6D; }
+
+.cursorFocus {
+  border: solid #3e3eed 3px !important;
+}

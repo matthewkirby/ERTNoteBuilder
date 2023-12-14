@@ -2,8 +2,10 @@
 .playerBox {
   font-weight: 600;
   margin: 0;
-  padding: 0.25em 1em;
+  padding: 2px;
   user-select: none;
+  border: solid rgba(0,0,0,0) 3px;
+  box-sizing: border-box;
 }
 
 .playerBox:hover {
