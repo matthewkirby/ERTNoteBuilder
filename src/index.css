@@ -32,3 +32,17 @@ code {
 .cursorFocus {
   border: solid #3e3eed 3px !important;
 }
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+  animation: fade 4s linear;
+}
+
+@keyframes fade {
+  0%, 100% { opacity: 0; }
+  25%, 75% { opacity: 1; }
+}

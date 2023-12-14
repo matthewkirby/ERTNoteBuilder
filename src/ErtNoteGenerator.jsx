@@ -3,6 +3,7 @@ import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
+import exportNote from "./utils";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -39,6 +40,7 @@ const playerList = [
 const ErtNoteGenerator = () => {
 
   const [noteBody, setNoteBody] = useState([[]]);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // Cursor represents where we are inserting things
   // null: everything appended to the end of the note
@@ -95,6 +97,14 @@ const ErtNoteGenerator = () => {
     setNoteBody(newNote);
   }
 
+  const showCopiedTooltip = () => {
+    setTooltipVisible(true);
+
+    setTimeout(() => {
+      setTooltipVisible(false);
+    }, 6000);
+  }
+
   return (
     <div className={styles.ertNoteGenerator}>
       <div className={styles.primaryNoteGenerator}>
@@ -113,6 +123,8 @@ const ErtNoteGenerator = () => {
 
       <CommandCenter
         insertNewRow={insertNewRow}
+        exportNote={() => { exportNote(noteBody); showCopiedTooltip(); }}
+        tooltipVisible={tooltipVisible}
       />
     </div>
   );
