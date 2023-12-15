@@ -1,4 +1,25 @@
 
+const classColors = {
+  death_knight:"C41E3A",
+  demon_hunter:"A330C9",
+  druid:"FF7C0A",
+  evoker:"33937F",
+  hunter:"AAD372",
+  mage:"3FC7EB",
+  monk:"00FF98",
+  paladin:"F48CBA",
+  priest:"FFFFFF",
+  rogue:"FFF468",
+  shaman:"0070DD",
+  warlock:"8788EE",
+  warrior:"C69B6D"
+}
+
+function formatPlayerName(playerInfo) {
+  const coloredName = `|cff${classColors[playerInfo.class]}${playerInfo.name}|r`;
+  return coloredName;
+}
+
 function exportNote(noteBody) {
   if (noteBody === null) { return; }
   let noteString = "";
@@ -6,7 +27,7 @@ function exportNote(noteBody) {
   for (let i = 0; i < noteBody.length; i++) {
     for (let j = 0; j < noteBody[i].length; j++) {
       if (noteBody[i][j].type === "player") {
-        noteString += `${noteBody[i][j].name} `
+        noteString += `${formatPlayerName(noteBody[i][j])} `
       }
     }
     noteString = noteString.trimEnd();
