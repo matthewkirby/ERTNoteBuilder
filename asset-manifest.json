@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ERTNoteBuilder/static/css/main.c75f4b05.css",
+    "main.js": "/ERTNoteBuilder/static/js/main.be3f51c7.js",
+    "index.html": "/ERTNoteBuilder/index.html",
+    "main.c75f4b05.css.map": "/ERTNoteBuilder/static/css/main.c75f4b05.css.map",
+    "main.be3f51c7.js.map": "/ERTNoteBuilder/static/js/main.be3f51c7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c75f4b05.css",
+    "static/js/main.be3f51c7.js"
+  ]
+}
