@@ -5,18 +5,19 @@
   padding: 1em;
 }
 
-.commandIcon {
+.buttonDelete {
   height: 3em;
   border: solid rgba(0,0,0,0) 1px;
-}
-
-.delete {
   color: #a81928;
 }
 
-.delete:hover {
+.buttonDelete:hover {
   margin: 5px 0 -5px 0;
   color: #e8152a;
+}
+
+.buttonCopy:active {
+  background-color: green !important;
 }
 
 .command {
@@ -29,6 +30,11 @@
 
 .command:hover {
   background-color: #2d2d2d;
+}
+
+.command:active {
+  margin-top: 3px;
+  margin-bottom: -3px;
 }
 
 .flushRight {
