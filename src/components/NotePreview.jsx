@@ -22,6 +22,14 @@ const NoteRow = ({ row, rowNumber, cursor, setCursor }) => {
   const cursorIsCell = Array.isArray(cursor);
   const focusThisRow = cursor === rowNumber;
 
+  const handleCellCursorAssignmentClicks = (cellIndex) => {
+    if (cursorIsCell && cursor[0] === rowNumber && cursor[1] === cellIndex+1) {
+      setCursor(rowNumber);
+    } else {
+      setCursor([rowNumber, cellIndex+1]);
+    }
+  };
+
   return (
     <div className={[styles.row, focusThisRow ? "cursorFocus" : ""].join(' ')}>
       <div className={styles.rowHeader} onClick={(e) => {e.stopPropagation(); setCursor(rowNumber);}}>{rowNumber+1}</div>
@@ -32,13 +40,7 @@ const NoteRow = ({ row, rowNumber, cursor, setCursor }) => {
               <Player
                 playerInfo={entry}
                 focus={cursorIsCell ? cursor[0] === rowNumber && cursor[1] === i+1 : false}
-                onClick={() => {
-                  if (cursorIsCell && cursor[0] === rowNumber && cursor[1] === i+1) {
-                    setCursor(rowNumber);
-                  } else {
-                    setCursor([rowNumber, i+1]);
-                  }
-                }}
+                onClick={() => handleCellCursorAssignmentClicks(i)}
                 key={i}
               />
             );
