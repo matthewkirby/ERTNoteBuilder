@@ -5,7 +5,7 @@ const Player = ({playerInfo, focus, onClick}) => {
   return (
     <div
       className={[styles.playerBox, playerInfo.class, focus ? "cursorFocus" : ""].join(' ')}
-      onClick={onClick !== undefined ? (e) => onClick(playerInfo) : undefined }
+      onClick={onClick !== undefined ? (e) => {e.stopPropagation(); onClick(playerInfo);} : undefined }
     >
       {playerInfo.name}
     </div>

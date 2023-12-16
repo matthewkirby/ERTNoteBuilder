@@ -7,7 +7,7 @@ const NotePreview = ({ contents, cursor, setCursor }) => {
   if (contents === null) { return <div className={styles.notePreview} style={{padding:"1em"}}>Get Started</div>}
 
   return (
-    <div className={styles.notePreview}>
+    <div className={styles.notePreview} onClick={(e) => setCursor(null)}>
       {contents.map((row, i) => {
         return <NoteRow row={row} rowNumber={i} cursor={cursor} setCursor={setCursor} key={i} />;
       })}
@@ -24,7 +24,7 @@ const NoteRow = ({ row, rowNumber, cursor, setCursor }) => {
 
   return (
     <div className={[styles.row, focusThisRow ? "cursorFocus" : ""].join(' ')}>
-      <div className={styles.rowHeader} onClick={(e) => setCursor(rowNumber)}>{rowNumber+1}</div>
+      <div className={styles.rowHeader} onClick={(e) => {e.stopPropagation(); setCursor(rowNumber);}}>{rowNumber+1}</div>
       <div className={styles.rowPreview}>
         {row.map((entry, i) => {
           if (entry.type === "player") {
