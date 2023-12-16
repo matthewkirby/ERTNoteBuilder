@@ -59,4 +59,4 @@ function getTextWidth(inputText, fontString) {
 }
 
 
-export { exportNote, getTextWidth, baselineTextElement } ;
+export { exportNote, getTextWidth, baselineTextElement };
