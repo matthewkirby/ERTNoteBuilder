@@ -1,4 +1,9 @@
 
+const baselineTextElement = {
+  type: "text",
+  content: "Text Field"
+}
+
 const classColors = {
   death_knight:"C41E3A",
   demon_hunter:"A330C9",
@@ -28,6 +33,8 @@ function exportNote(noteBody) {
     for (let j = 0; j < noteBody[i].length; j++) {
       if (noteBody[i][j].type === "player") {
         noteString += `${formatPlayerName(noteBody[i][j])} `
+      } else if (noteBody[i][j].type === "text") {
+        noteString += `${noteBody[i][j].content} `
       }
     }
     noteString = noteString.trimEnd();
@@ -41,5 +48,15 @@ function exportNote(noteBody) {
   navigator.clipboard.writeText(noteString);
 }
 
+function getTextWidth(inputText, fontString) {
+  // font should be in "#units name" format
+  const canvas = document.createElement("canvas");
+  let context = canvas.getContext("2d");
+  context.font = fontString;
+  const width = context.measureText(inputText).width;
+  const formattedWidth = Math.ceil(width) + "px";
+  return formattedWidth;
+}
 
-export default exportNote;
+
+export { exportNote, getTextWidth, baselineTextElement } ;

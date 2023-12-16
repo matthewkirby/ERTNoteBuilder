@@ -3,7 +3,7 @@ import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
-import exportNote from "./utils";
+import { baselineTextElement, exportNote } from "./utils";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -52,9 +52,9 @@ const ErtNoteGenerator = () => {
 
 
 
-  const addElementToNote = (player) => {
+  const addElementToNote = (element) => {
     if (noteBody === null) {
-      setNoteBody([[player]]);
+      setNoteBody([[element]]);
       return;
     }
 
@@ -63,7 +63,7 @@ const ErtNoteGenerator = () => {
     if (cursor === null) {
       const lastRow = noteBody[noteBody.length - 1];
       newNote = [...noteBody];
-      newNote[noteBody.length - 1] = [...lastRow, player]
+      newNote[noteBody.length - 1] = [...lastRow, element]
     }
     // If cursor on a row, add to the end of that row
     else if (typeof cursor === 'number') {
@@ -73,7 +73,7 @@ const ErtNoteGenerator = () => {
       }
       const selectedRow = noteBody[cursor];
       newNote = [...noteBody];
-      newNote[cursor] = [...selectedRow, player];
+      newNote[cursor] = [...selectedRow, element];
     }
     // If cursor is on a cell, replace that cell
     else if (Array.isArray(cursor)) {
@@ -85,7 +85,7 @@ const ErtNoteGenerator = () => {
 
       let newRow = [...noteBody[row]];
       newNote = [...noteBody];
-      newRow[cell-1] = player;
+      newRow[cell-1] = element;
       newNote[row] = newRow;
     }
     setNoteBody(newNote);
@@ -93,6 +93,23 @@ const ErtNoteGenerator = () => {
 
   const insertNewRow = () => {
     const newNote = [...noteBody, []];
+    setNoteBody(newNote);
+  }
+
+  // This function can be replaced by addElementToNote if the cursor is always on a focused input field
+  const onChangeTextField = (cellPosition, newValue) => {
+    const [row, cell] = cellPosition;
+    if (row > noteBody.length - 1 || row < 0 || cell < 0 || cell > noteBody[row].length) {
+      console.log(`Cell position ${cellPosition} is invalid in changeTextField.`);
+      return;
+    }
+
+    let newTextField = JSON.parse(JSON.stringify(baselineTextElement));
+    newTextField.content = newValue;
+    let newRow = [...noteBody[row]];
+    let newNote = [...noteBody];
+    newRow[cell-1] = newTextField;
+    newNote[row] = newRow;
     setNoteBody(newNote);
   }
 
@@ -117,11 +134,13 @@ const ErtNoteGenerator = () => {
           contents={noteBody}
           cursor={cursor}
           setCursor={setCursor}
+          onChangeTextField={onChangeTextField}
         />
       </div>
 
       <CommandCenter
         insertNewRow={insertNewRow}
+        addElement={addElementToNote}
         exportNote={() => { exportNote(noteBody); showCopiedTooltip(); }}
         tooltipVisible={tooltipVisible}
       />
