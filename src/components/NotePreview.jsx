@@ -32,7 +32,13 @@ const NoteRow = ({ row, rowNumber, cursor, setCursor }) => {
               <Player
                 playerInfo={entry}
                 focus={cursorIsCell ? cursor[0] === rowNumber && cursor[1] === i+1 : false}
-                onClick={() => setCursor([rowNumber, i+1])}
+                onClick={() => {
+                  if (cursorIsCell && cursor[0] === rowNumber && cursor[1] === i+1) {
+                    setCursor(rowNumber);
+                  } else {
+                    setCursor([rowNumber, i+1]);
+                  }
+                }}
                 key={i}
               />
             );
