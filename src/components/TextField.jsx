@@ -14,6 +14,7 @@ const TextField = ({content, onClick, onChange}) => {
       autoFocus
       onClick={(e) => handleClick(e)}
       onChange={(e) => onChange(e.target.value)}
+      onFocus={(e) => e.target.select()}
     />);
 
 }
