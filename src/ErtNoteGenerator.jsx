@@ -120,6 +120,27 @@ const ErtNoteGenerator = () => {
     setCursor(insertIndex);
   }
 
+  const deleteElement = () => {
+    let newNote = [...noteBody];
+    let newCursor = null;
+    if (Array.isArray(cursor)) {
+      const rowIndex = cursor[0];
+      let newRow = [...newNote[rowIndex]];
+      newRow.splice(cursor[1] - 1, 1);
+      newNote[rowIndex] = newRow;
+      newCursor = cursor[1] === 1 ? null : [rowIndex, cursor[1] - 1];
+    } else if (cursor !== null) {
+      newNote.splice(cursor, 1);
+      newCursor = cursor === 0 ? null : cursor - 1;
+    }
+
+    if (newNote.length === 0) {
+      newNote = [[]];
+    }
+    setNoteBody(newNote);
+    setCursor(newCursor);
+  }
+
   // This function can be replaced by addElementToNote if the cursor is always on a focused input field
   const onChangeTextField = (cellPosition, newValue) => {
     const [row, cell] = cellPosition;
@@ -163,8 +184,10 @@ const ErtNoteGenerator = () => {
       </div>
 
       <CommandCenter
+        cursor={cursor}
         insertNewRow={insertNewRow}
         addElement={addElementToNote}
+        deleteElement={deleteElement}
         exportNote={() => { exportNote(noteBody); showCopiedTooltip(); }}
         tooltipVisible={tooltipVisible}
       />

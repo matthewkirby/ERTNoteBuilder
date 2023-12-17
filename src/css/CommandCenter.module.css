@@ -6,13 +6,11 @@
 }
 
 .buttonDelete {
-  height: 3em;
   border: solid rgba(0,0,0,0) 1px;
   color: #a81928;
 }
 
 .buttonDelete:hover {
-  margin: 5px 0 -5px 0;
   color: #e8152a;
 }
 

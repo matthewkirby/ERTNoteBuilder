@@ -1,6 +1,9 @@
 import styles from "../css/TextField.module.css";
 import { getTextWidth } from "../utils";
 
+// When I click to add a new row at the top, a text field is getting selected
+// Handle max width to prevent clipping out of app
+
 const TextField = ({content, onClick, onChange}) => {
 
   const handleClick = (e) => { e.stopPropagation(); onClick(); };
