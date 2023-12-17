@@ -52,18 +52,20 @@ const ErtNoteGenerator = () => {
 
 
 
-  const addElementToNote = (element) => {
+  const addElementToNote = (element, focusNewElement=false) => {
     if (noteBody === null) {
       setNoteBody([[element]]);
       return;
     }
 
     let newNote = undefined;
+    let newElementLoc = undefined;
     // If cursor is not defined, add to the end of last line
     if (cursor === null) {
       const lastRow = noteBody[noteBody.length - 1];
       newNote = [...noteBody];
-      newNote[noteBody.length - 1] = [...lastRow, element]
+      newNote[noteBody.length - 1] = [...lastRow, element];
+      newElementLoc = [newNote.length-1, newNote[newNote.length-1].length];
     }
     // If cursor on a row, add to the end of that row
     else if (typeof cursor === 'number') {
@@ -74,6 +76,7 @@ const ErtNoteGenerator = () => {
       const selectedRow = noteBody[cursor];
       newNote = [...noteBody];
       newNote[cursor] = [...selectedRow, element];
+      newElementLoc = [cursor, newNote[cursor].length];
     }
     // If cursor is on a cell, replace that cell
     else if (Array.isArray(cursor)) {
@@ -87,6 +90,11 @@ const ErtNoteGenerator = () => {
       newNote = [...noteBody];
       newRow[cell-1] = element;
       newNote[row] = newRow;
+      newElementLoc = cursor;
+    }
+
+    if (focusNewElement) {
+      setCursor(newElementLoc);
     }
     setNoteBody(newNote);
   }
