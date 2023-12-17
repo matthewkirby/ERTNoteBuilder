@@ -91,9 +91,25 @@ const ErtNoteGenerator = () => {
     setNoteBody(newNote);
   }
 
-  const insertNewRow = () => {
-    const newNote = [...noteBody, []];
+  const insertNewRow = (position) => {
+    let insertIndex = noteBody.length;
+    if (cursor === null) {
+      if (position === "up") {
+        insertIndex = 0;
+      }
+    } else if (position !== "primary") {
+      const cursorRow = Array.isArray(cursor) ? cursor[0] : cursor;
+      switch (position) {
+        case "up": insertIndex = cursorRow; break;
+        case "down": insertIndex = cursorRow + 1; break;
+        default: insertIndex = cursorRow;
+      }
+    }
+
+    let newNote = [...noteBody];
+    newNote.splice(insertIndex, 0, [])
     setNoteBody(newNote);
+    setCursor(insertIndex);
   }
 
   // This function can be replaced by addElementToNote if the cursor is always on a focused input field

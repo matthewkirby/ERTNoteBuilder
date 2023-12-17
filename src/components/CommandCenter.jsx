@@ -2,10 +2,9 @@ import styles from "../css/CommandCenter.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faClone } from '@fortawesome/free-solid-svg-icons';
 import { baselineTextElement } from "../utils";
+import { ButtonWithTwoModes } from "./ModularButtons";
 
 const CommandCenter = ({ insertNewRow, addElement, exportNote, tooltipVisible }) => {
-
-  // Put button with up/down halves and arrow unicode things to specify if inserting line above or below selection
 
   // Triple button with insertLeft/Replace/insertRight buttons
 
@@ -16,10 +15,10 @@ const CommandCenter = ({ insertNewRow, addElement, exportNote, tooltipVisible })
   return (
     <div className={styles.commandCenter}>
       <FontAwesomeIcon className={styles.buttonDelete} icon={faCaretDown} />
-      <div className={styles.command} onClick={() => insertNewRow()}>Insert New Row</div>
-      <div className={styles.command} onClick={() => addElement(baselineTextElement)}>Insert Text Field</div>
+      <ButtonWithTwoModes textPrimary="New Row" onClick={insertNewRow} className={styles.command} childClassName={styles.commandSelectors} />
+      <div className={[styles.command, styles.commandSelectors].join(' ')} onClick={() => addElement(baselineTextElement)}>Text Field</div>
       <div
-        className={[styles.command, styles.flushRight, styles.tooltipBase, styles.buttonCopy].join(' ')}
+        className={[styles.command, styles.commandSelectors, styles.flushRight, styles.tooltipBase, styles.buttonCopy].join(' ')}
         onClick={() => exportNote()}
       >
         <FontAwesomeIcon icon={faClone} size="lg" />
