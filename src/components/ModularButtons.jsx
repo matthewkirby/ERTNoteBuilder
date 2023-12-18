@@ -11,12 +11,34 @@ const ButtonWithTwoModes = ({ textPrimary, onClick, className, childClassName })
       <div className={[styles.bwtm, styles.bwtmDown, childClassName].join(' ')} onClick={() => onClick("down")} >🡇</div>
     </div>
   );
-}
+};
 
+// This button has a left/replace/right option. If I want to generalize in future
+const TripleButton = ({ activeButton, buttonLabels = [0,1,2], values = [0,1,2], onClick, className, childClassName }) => {
+  // Handle possibility of being passed an array of classes as strings
+  const formattedClassName = Array.isArray(className) ? className.join(' ') : className;
+  const formattedChildClassName = Array.isArray(childClassName) ? childClassName.join(' ') : childClassName;
 
+  // Helpers
+  const formattedActiveButton = activeButton == null ? values[1] : activeButton;
+  const buttonStyles = [styles.tbLeft, styles.tbCenter, styles.tbRight];
 
+  return (
+    <div className={[formattedClassName, styles.tbContainer].join(' ')}>
+      {[0,1,2].map((i) => {
+        const isActiveButton = formattedActiveButton === values[i];
+        return (
+          <div
+            className={[buttonStyles[i], formattedChildClassName, isActiveButton ? styles.tbActiveButton : ""].join(' ')}
+            onClick={() => onClick(values[i])}
+            key={i}
+          >
+            {buttonLabels[i]}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
-
-// Another button to make here that is three way for left/replace/right for
-// inserting an element with respect to the cursor
-export { ButtonWithTwoModes };
+export { ButtonWithTwoModes, TripleButton };

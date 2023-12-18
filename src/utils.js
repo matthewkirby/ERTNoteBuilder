@@ -58,5 +58,16 @@ function getTextWidth(inputText, fontString) {
   return formattedWidth;
 }
 
+function isCursorValid(cursor, noteBody) {
+  if (typeof cursor === 'number') {
+    if (cursor > noteBody.length - 1 || cursor < 0) return false;
+  } else if (Array.isArray(cursor)) {
+    const [row, cell] = cursor;
+    if (row > noteBody.length - 1 || row < 0) return false;
+    if (cell < 1 || cell > noteBody[row].length) return false;
+  }
+  return true;
+}
 
-export { exportNote, getTextWidth, baselineTextElement };
+
+export { isCursorValid, exportNote, getTextWidth, baselineTextElement };

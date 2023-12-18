@@ -32,3 +32,44 @@
   text-align: center;
   border-bottom-right-radius: inherit;
 }
+
+.tbContainer {
+  display: grid;
+  padding: 0 !important;
+  grid-template-columns: repeat(3, min-content);
+  grid-template-rows: 1fr;
+  grid-template-areas: "left center right";
+
+  & div {
+    place-self: stretch;
+    padding: 0.75em 1em;
+  }
+
+  & .tbLeft {
+    grid-area: left;
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+
+  & .tbCenter {
+    grid-area: center;
+    margin: 0 -1px;
+    border-right: inherit;
+    border-left: inherit;
+  }
+
+  & .tbRight {
+    grid-area: right;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    margin-left: 1px;
+  }
+
+  & .tbActiveButton {
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+
+  & .tbActiveButton:hover {
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+}

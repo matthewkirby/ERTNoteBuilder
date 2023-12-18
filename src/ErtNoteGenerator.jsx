@@ -3,7 +3,7 @@ import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
-import { baselineTextElement, exportNote } from "./utils";
+import { baselineTextElement, exportNote, isCursorValid } from "./utils";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -49,54 +49,55 @@ const ErtNoteGenerator = () => {
   //    and 0,1 is the first entry in a row. Replaces the selected cell.
   //    A row can be added above or below according to command center
   const [cursor, setCursor] = useState(null)
-
+  const [insertBehavior, setInsertBehavior] = useState("replace");
 
 
   const addElementToNote = (element, focusNewElement=false) => {
+    if (!isCursorValid(cursor, noteBody)) {
+      setCursor(null);
+      return;
+    }
+
     if (noteBody === null) {
       setNoteBody([[element]]);
       return;
     }
 
-    let newNote = undefined;
-    let newElementLoc = undefined;
-    // If cursor is not defined, add to the end of last line
-    if (cursor === null) {
-      const lastRow = noteBody[noteBody.length - 1];
-      newNote = [...noteBody];
-      newNote[noteBody.length - 1] = [...lastRow, element];
-      newElementLoc = [newNote.length-1, newNote[newNote.length-1].length];
-    }
-    // If cursor on a row, add to the end of that row
-    else if (typeof cursor === 'number') {
-      if (cursor > noteBody.length - 1 || cursor < 0) {
-        setCursor(null);
-        return;
-      }
-      const selectedRow = noteBody[cursor];
-      newNote = [...noteBody];
-      newNote[cursor] = [...selectedRow, element];
-      newElementLoc = [cursor, newNote[cursor].length];
-    }
-    // If cursor is on a cell, replace that cell
-    else if (Array.isArray(cursor)) {
-      const [row, cell] = cursor;
-      if (row > noteBody.length - 1 || row < 0 || cell < 0 || cell > noteBody[row].length) {
-        setCursor(null);
-        return;
-      }
+    // Identify where to insert the new element
+    let inCursor = null;
+    let nDelete = 0;
+    let newCursor = null;
+    if (cursor === null && insertBehavior === "left")
+      inCursor = [0,1];
+    else if (cursor === null && insertBehavior === "replace")
+      inCursor = [noteBody.length-1, noteBody[noteBody.length-1].length + 1];
+    else if (cursor === null && insertBehavior === "right")
+      inCursor = [noteBody.length-1, noteBody[noteBody.length-1].length + 1];
+    else if (typeof cursor === "number" && insertBehavior === "left")
+      inCursor = [cursor, 1];
+    else if (typeof cursor === "number" && insertBehavior === "replace")
+      inCursor = [cursor, noteBody[cursor].length + 1];
+    else if (typeof cursor === "number" && insertBehavior === "right")
+      inCursor = [cursor, noteBody[cursor].length + 1];
+    else if (Array.isArray(cursor) && insertBehavior === "left") {
+      inCursor = [cursor[0], cursor[1]];
+      newCursor = [cursor[0], cursor[1]+1];
+    } else if (Array.isArray(cursor) && insertBehavior === "replace") {
+      inCursor = [cursor[0], cursor[1]];
+      nDelete = 1;
+    } else if (Array.isArray(cursor) && insertBehavior === "right")
+      inCursor = [cursor[0], cursor[1]+1]
 
-      let newRow = [...noteBody[row]];
-      newNote = [...noteBody];
-      newRow[cell-1] = element;
-      newNote[row] = newRow;
-      newElementLoc = cursor;
-    }
-
-    if (focusNewElement) {
-      setCursor(newElementLoc);
-    }
+    let newNote = [...noteBody];
+    let newRow = [...newNote[inCursor[0]]];
+    newRow.splice(inCursor[1]-1, nDelete, element);
+    newNote[inCursor[0]] = newRow;
     setNoteBody(newNote);
+    if (focusNewElement) {
+      setCursor(inCursor);
+    } else if (newCursor !== null) {
+      setCursor(newCursor);
+    }
   }
 
   const insertNewRow = (position) => {
@@ -185,6 +186,8 @@ const ErtNoteGenerator = () => {
 
       <CommandCenter
         cursor={cursor}
+        insertBehavior={insertBehavior}
+        setInsertBehavior={setInsertBehavior}
         insertNewRow={insertNewRow}
         addElement={addElementToNote}
         deleteElement={deleteElement}

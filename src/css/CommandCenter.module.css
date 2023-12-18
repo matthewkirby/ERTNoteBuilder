@@ -27,7 +27,7 @@
 }
 
 .commandSelectors:hover {
-  background-color: #3d3d3d;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .commandSelectors:active {
