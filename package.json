@@ -1,7 +1,7 @@
 {
-  "name": "ert-note-generator",
-  "homepage": "https://matthewkirby.github.io/ERTNoteBuilder",
-  "version": "0.1.0",
+  "name": "mrt-note-generator",
+  "homepage": "https://matthewkirby.github.io/MRTNoteBuilder",
+  "version": "0.9.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",

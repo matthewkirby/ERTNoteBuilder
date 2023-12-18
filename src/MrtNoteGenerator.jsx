@@ -1,4 +1,4 @@
-import styles from "./css/ErtNoteGenerator.module.css";
+import styles from "./css/MrtNoteGenerator.module.css";
 import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
@@ -36,7 +36,7 @@ const playerList = [
 ]
 
 
-const ErtNoteGenerator = () => {
+const MrtNoteGenerator = () => {
 
   const [noteBody, setNoteBody] = useState([[]]);
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -168,7 +168,7 @@ const ErtNoteGenerator = () => {
   }
 
   return (
-    <div className={styles.ertNoteGenerator}>
+    <div className={styles.mrtNoteGenerator}>
       <div className={styles.primaryNoteGenerator}>
         <div className={styles.raiderList}>
           <PlayerList role="dps" playerList={playerList} addElementToNote={addElementToNote} />
@@ -198,4 +198,4 @@ const ErtNoteGenerator = () => {
   );
 }
 
-export default ErtNoteGenerator;
+export default MrtNoteGenerator;
