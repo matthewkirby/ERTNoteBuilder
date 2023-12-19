@@ -61,7 +61,7 @@ const NoteRow = ({ row, rowNumber, cursor, setCursor, onChangeTextField }) => {
               <TextField
                 content={entry.content}
                 onClick={() => setCursor([rowNumber, i+1])}
-                onChange={(newValue) => onChangeTextField([rowNumber, i+1], newValue)}
+                onChange={(newValue) => onChangeTextField(newValue)}
                 key={i}
               />
             );

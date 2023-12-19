@@ -3,7 +3,8 @@ import { useState } from 'react';
 import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
-import { baselineTextElement, exportNote, isCursorValid } from "./utils";
+import { exportNote } from "./utils";
+import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "./noteUtils";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -38,7 +39,8 @@ const playerList = [
 
 const MrtNoteGenerator = () => {
 
-  const [noteBody, setNoteBody] = useState([[]]);
+  const [activeTab, setActiveTab] = useState(0);
+  const [noteList, setNoteList] = useState({ 0: { name: "0", content: [[]] } });
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // Cursor represents where we are inserting things
@@ -49,115 +51,45 @@ const MrtNoteGenerator = () => {
   //    and 0,1 is the first entry in a row. Replaces the selected cell.
   //    A row can be added above or below according to command center
   const [cursor, setCursor] = useState(null)
-  const [insertBehavior, setInsertBehavior] = useState("replace");
+  const [insertBehavior, setInsertBehavior] = useState("right");
+
+  // Set up some helper variables
+  const activeNote = noteList[activeTab].content;
 
 
-  const addElementToNote = (element, focusNewElement=false) => {
-    if (!isCursorValid(cursor, noteBody)) {
-      setCursor(null);
-      return;
+  const updateNote = (mode, newContent = null, extraInput = null) => {
+    let newNoteList = { ...noteList };
+    let output = null;
+
+    if (mode === "insertElement") { // extraInput should be focusNewElement boolean
+      if (newContent === null)
+        console.log("updateNote(\"insertElement\", newContent) requires an element");
+      const options = { insertBehavior: insertBehavior };
+      output = noteAddElement(newContent, cursor, activeNote, options, extraInput ?? true);
+    } else if (mode === "insertRow") { // extraInput should be rowInsertDirection "primary"||"up"||"down"
+      output = noteAddRow(cursor, activeNote, extraInput ?? "primary");
+    } else if (mode === "deleteElement") {
+      output = noteDeleteElement(cursor, activeNote);
+    } else if (mode === "updateTextField") { // extraInput
+      if (newContent === null)
+        console.log("updateNote(\"updateTextField\", newContent) requires a new value");
+      output = noteUpdateTextField(cursor, activeNote, newContent);
+    } else {
+      console.log(`Note update mode >> ${mode} << unknown.`);
     }
 
-    if (noteBody === null) {
-      setNoteBody([[element]]);
-      return;
+    if (output === null) return;
+    // Update note if needed
+    if (output.updateNote) {
+      newNoteList[activeTab].content = output.noteBody;
+      setNoteList(newNoteList);
     }
-
-    // Identify where to insert the new element
-    let inCursor = null;
-    let nDelete = 0;
-    let newCursor = null;
-    if (cursor === null && insertBehavior === "left")
-      inCursor = [0,1];
-    else if (cursor === null && insertBehavior === "replace")
-      inCursor = [noteBody.length-1, noteBody[noteBody.length-1].length + 1];
-    else if (cursor === null && insertBehavior === "right")
-      inCursor = [noteBody.length-1, noteBody[noteBody.length-1].length + 1];
-    else if (typeof cursor === "number" && insertBehavior === "left")
-      inCursor = [cursor, 1];
-    else if (typeof cursor === "number" && insertBehavior === "replace")
-      inCursor = [cursor, noteBody[cursor].length + 1];
-    else if (typeof cursor === "number" && insertBehavior === "right")
-      inCursor = [cursor, noteBody[cursor].length + 1];
-    else if (Array.isArray(cursor) && insertBehavior === "left") {
-      inCursor = [cursor[0], cursor[1]];
-      newCursor = [cursor[0], cursor[1]+1];
-    } else if (Array.isArray(cursor) && insertBehavior === "replace") {
-      inCursor = [cursor[0], cursor[1]];
-      nDelete = 1;
-    } else if (Array.isArray(cursor) && insertBehavior === "right")
-      inCursor = [cursor[0], cursor[1]+1]
-
-    let newNote = [...noteBody];
-    let newRow = [...newNote[inCursor[0]]];
-    newRow.splice(inCursor[1]-1, nDelete, element);
-    newNote[inCursor[0]] = newRow;
-    setNoteBody(newNote);
-    if (focusNewElement) {
-      setCursor(inCursor);
-    } else if (newCursor !== null) {
-      setCursor(newCursor);
+    // Update cursor if needed
+    if (output.updateCursor) {
+      setCursor(output.cursor);
     }
-  }
+  };
 
-  const insertNewRow = (position) => {
-    let insertIndex = noteBody.length;
-    if (cursor === null) {
-      if (position === "up") {
-        insertIndex = 0;
-      }
-    } else if (position !== "primary") {
-      const cursorRow = Array.isArray(cursor) ? cursor[0] : cursor;
-      switch (position) {
-        case "up": insertIndex = cursorRow; break;
-        case "down": insertIndex = cursorRow + 1; break;
-        default: insertIndex = cursorRow;
-      }
-    }
-
-    let newNote = [...noteBody];
-    newNote.splice(insertIndex, 0, [])
-    setNoteBody(newNote);
-    setCursor(insertIndex);
-  }
-
-  const deleteElement = () => {
-    let newNote = [...noteBody];
-    let newCursor = null;
-    if (Array.isArray(cursor)) {
-      const rowIndex = cursor[0];
-      let newRow = [...newNote[rowIndex]];
-      newRow.splice(cursor[1] - 1, 1);
-      newNote[rowIndex] = newRow;
-      newCursor = cursor[1] === 1 ? null : [rowIndex, cursor[1] - 1];
-    } else if (cursor !== null) {
-      newNote.splice(cursor, 1);
-      newCursor = cursor === 0 ? null : cursor - 1;
-    }
-
-    if (newNote.length === 0) {
-      newNote = [[]];
-    }
-    setNoteBody(newNote);
-    setCursor(newCursor);
-  }
-
-  // This function can be replaced by addElementToNote if the cursor is always on a focused input field
-  const onChangeTextField = (cellPosition, newValue) => {
-    const [row, cell] = cellPosition;
-    if (row > noteBody.length - 1 || row < 0 || cell < 0 || cell > noteBody[row].length) {
-      console.log(`Cell position ${cellPosition} is invalid in changeTextField.`);
-      return;
-    }
-
-    let newTextField = JSON.parse(JSON.stringify(baselineTextElement));
-    newTextField.content = newValue;
-    let newRow = [...noteBody[row]];
-    let newNote = [...noteBody];
-    newRow[cell-1] = newTextField;
-    newNote[row] = newRow;
-    setNoteBody(newNote);
-  }
 
   const showCopiedTooltip = () => {
     setTooltipVisible(true);
@@ -167,20 +99,21 @@ const MrtNoteGenerator = () => {
     }, 6000);
   }
 
+
   return (
     <div className={styles.mrtNoteGenerator}>
       <div className={styles.primaryNoteGenerator}>
         <div className={styles.raiderList}>
-          <PlayerList role="dps" playerList={playerList} addElementToNote={addElementToNote} />
-          <PlayerList role="tank" playerList={playerList} addElementToNote={addElementToNote} />
-          <PlayerList role="healer" playerList={playerList} addElementToNote={addElementToNote} />
+          <PlayerList role="dps" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
+          <PlayerList role="tank" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
+          <PlayerList role="healer" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
         </div>
 
         <NotePreview
-          contents={noteBody}
+          contents={activeNote}
           cursor={cursor}
           setCursor={setCursor}
-          onChangeTextField={onChangeTextField}
+          onChangeTextField={(newValue) => updateNote("updateTextField", newValue)}
         />
       </div>
 
@@ -188,10 +121,10 @@ const MrtNoteGenerator = () => {
         cursor={cursor}
         insertBehavior={insertBehavior}
         setInsertBehavior={setInsertBehavior}
-        insertNewRow={insertNewRow}
-        addElement={addElementToNote}
-        deleteElement={deleteElement}
-        exportNote={() => { exportNote(noteBody); showCopiedTooltip(); }}
+        insertNewRow={(rowInsertDirection) => updateNote("insertRow", null, rowInsertDirection)}
+        addElement={(element) => updateNote("insertElement", element)}
+        deleteElement={() => updateNote("deleteElement")}
+        exportNote={() => { exportNote(activeNote); showCopiedTooltip(); }}
         tooltipVisible={tooltipVisible}
       />
     </div>
