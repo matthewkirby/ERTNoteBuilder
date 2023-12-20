@@ -2,11 +2,11 @@
   font-weight: 600;
   margin: 0;
   padding: 0.25em;
-  border-bottom: 1px grey solid;
+  border-bottom: var(--border-style) var(--border-color) var(--border-width);
   background-color: #2d2d2d;
   user-select: none;
 }
 
 .heading:not(:first-child) {
-  border-top: 1px grey solid;
+  border-top: var(--border-style) var(--border-color) var(--border-width);
 }
