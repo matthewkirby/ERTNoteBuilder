@@ -1,6 +1,6 @@
 import styles from "../css/CommandCenter.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClone, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faClone, faPlay, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { baselineTextElement } from "../utils";
 import { ButtonWithTwoModes, TripleButton } from "./ModularButtons";
 
@@ -26,7 +26,7 @@ const CommandCenter = ({ cursor, insertBehavior, setInsertBehavior, insertNewRow
 
       <TripleButton
         activeButton={insertBehavior}
-        buttonLabels={["◀", "Replace", "▶"]}
+        buttonLabels={[<FontAwesomeIcon icon={faPlay} flip="horizontal" size="lg" />, "Replace", <FontAwesomeIcon icon={faPlay} size="lg" />]}
         values={["left", "replace", "right"]}
         onClick={setInsertBehavior}
         className={styles.command}
