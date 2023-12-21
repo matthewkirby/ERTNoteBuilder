@@ -1,0 +1,51 @@
+
+.tabBar {
+  border: var(--border-width) solid rgba(255, 255, 255, 0);
+  display: flex;
+  flex-direction: row;
+  padding: 5px 10px;
+  gap: 4px;
+}
+
+.tabNumbers, .tabControls {
+  display: inherit;
+  flex-direction: inherit;
+  gap: inherit;
+}
+
+.tabNumbers {
+  font-weight: 800;
+}
+
+.tabControls {
+  margin-left: auto;
+}
+
+.tabButton {
+  border-radius: 3px;
+  padding: 0.5em 1em;
+  background-color: #202020;
+  user-select: none;
+  text-align: center;
+}
+
+.tabButton:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.tabButtonActive {
+  margin: 6px 0 -6px 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+  background-color: var(--border-color);
+}
+
+.tabButtonActive:hover {
+  background-color: rgba(255, 255, 255, 0.24);
+}
+
+.tabButton.disabled {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: rgb(80,80,80);
+}

@@ -1,3 +1,4 @@
+const maxNoteTabs = 10;
 
 const baselineTextElement = {
   type: "text",
@@ -69,5 +70,14 @@ function isCursorValid(cursor, noteBody) {
   return true;
 }
 
+const validateChangeTab = (proposedTab, nTabs) => {
+  let newTab = proposedTab;
+  if (proposedTab < 0)
+    newTab = 0;
+  if (proposedTab > nTabs-1)
+    newTab = nTabs-1;
+  return newTab;
+};
 
-export { isCursorValid, exportNote, getTextWidth, baselineTextElement };
+
+export { isCursorValid, exportNote, getTextWidth, baselineTextElement, validateChangeTab, maxNoteTabs };

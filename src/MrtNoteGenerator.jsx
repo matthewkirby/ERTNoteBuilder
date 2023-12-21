@@ -1,10 +1,10 @@
 import styles from "./css/MrtNoteGenerator.module.css";
 import { useState } from 'react';
-import NotePreview from "./components/NotePreview";
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
-import { exportNote } from "./utils";
+import { exportNote, maxNoteTabs, validateChangeTab } from "./utils";
 import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "./noteUtils";
+import Note from "./components/Note";
 
 const playerList = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
@@ -36,11 +36,14 @@ const playerList = [
   { name: "Iamalsotater", class: "paladin", role: "healer", type: "player" }
 ]
 
+const cursorDefault = null;
+const noteListDefault = [ [[]] ]
+
 
 const MrtNoteGenerator = () => {
 
   const [activeTab, setActiveTab] = useState(0);
-  const [noteList, setNoteList] = useState({ 0: { name: "0", content: [[]] } });
+  const [noteList, setNoteList] = useState(noteListDefault);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // Cursor represents where we are inserting things
@@ -50,15 +53,15 @@ const MrtNoteGenerator = () => {
   // pair (e.g. [0,3]): a cell is selected. First number is row, second number is cell. The row header is 0,0
   //    and 0,1 is the first entry in a row. Replaces the selected cell.
   //    A row can be added above or below according to command center
-  const [cursor, setCursor] = useState(null)
+  const [cursor, setCursor] = useState(cursorDefault)
   const [insertBehavior, setInsertBehavior] = useState("right");
 
   // Set up some helper variables
-  const activeNote = noteList[activeTab].content;
+  const activeNote = noteList[activeTab];
 
 
   const updateNote = (mode, newContent = null, extraInput = null) => {
-    let newNoteList = { ...noteList };
+    let newNoteList = [ ...noteList ];
     let output = null;
 
     if (mode === "insertElement") { // extraInput should be focusNewElement boolean
@@ -81,7 +84,7 @@ const MrtNoteGenerator = () => {
     if (output === null) return;
     // Update note if needed
     if (output.updateNote) {
-      newNoteList[activeTab].content = output.noteBody;
+      newNoteList[activeTab] = output.noteBody;
       setNoteList(newNoteList);
     }
     // Update cursor if needed
@@ -90,6 +93,27 @@ const MrtNoteGenerator = () => {
     }
   };
 
+  const addNoteTab = () => {
+    if (noteList.length >= maxNoteTabs)
+      return;
+    let newNoteList = [ ...noteList ];
+    const newLength = newNoteList.push([[]]);
+    setNoteList(newNoteList);
+    setCursor(cursorDefault);
+    setActiveTab(newLength-1);
+  }
+
+  const deleteNoteTab = () => {
+    let newNoteList = [ ...noteList ];
+    newNoteList.splice(activeTab, 1);
+    if(newNoteList.length === 0) {
+      newNoteList = noteListDefault;
+    }
+    setNoteList(newNoteList);
+    setCursor(cursorDefault);
+    setActiveTab(validateChangeTab(activeTab-1, newNoteList.length));
+  }
+
 
   const showCopiedTooltip = () => {
     setTooltipVisible(true);
@@ -97,7 +121,14 @@ const MrtNoteGenerator = () => {
     setTimeout(() => {
       setTooltipVisible(false);
     }, 6000);
-  }
+  };
+
+  const setActiveTabHelper = (newActiveTab) => {
+    if (newActiveTab === activeTab)
+      return;
+    setActiveTab(newActiveTab);
+    setCursor(cursorDefault);
+  };
 
 
   return (
@@ -109,12 +140,18 @@ const MrtNoteGenerator = () => {
           <PlayerList role="healer" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
         </div>
 
-        <NotePreview
-          contents={activeNote}
+        <Note
+          noteList={noteList}
+          activeTab={activeTab}
+          setActiveTab={setActiveTabHelper}
+          noteBody={activeNote}
           cursor={cursor}
           setCursor={setCursor}
-          onChangeTextField={(newValue) => updateNote("updateTextField", newValue)}
+          updateNote={updateNote}
+          addNoteTab={addNoteTab}
+          deleteNoteTab={deleteNoteTab}
         />
+
       </div>
 
       <CommandCenter
