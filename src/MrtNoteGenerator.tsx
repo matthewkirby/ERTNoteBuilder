@@ -1,12 +1,13 @@
-import styles from "./css/MrtNoteGenerator.module.css";
-import { useState } from 'react';
+import styles from "css/MrtNoteGenerator.module.css";
+import React, { useState } from 'react';
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
 import { exportNote, maxNoteTabs, validateChangeTab } from "./utils";
 import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "./noteUtils";
 import Note from "./components/Note";
+import { CursorTypes, InsertBehaviorTypes, NoteElementDataTypes, NoteListType, NoteType, PlayerData, RowInsertDirectionTypes, UpdateNoteExtraInput, UpdateNoteModeTypes, UpdateNoteNewContent, UpdateNoteOutputType } from "types/commonTypes";
 
-const playerList = [
+const playerList: PlayerData[] = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },
   { name: "Yodiechit", class: "druid", role: "dps", type: "player" },
   { name: "Cawcawlin", class: "druid", role: "dps", type: "player" },
@@ -34,17 +35,17 @@ const playerList = [
   { name: "Faythope", class: "monk", role: "healer", type: "player" },
   { name: "Freelessons", class: "shaman", role: "healer", type: "player" },
   { name: "Iamalsotater", class: "paladin", role: "healer", type: "player" }
-]
+];
 
-const cursorDefault = null;
-const noteListDefault = [ [[]] ]
+const cursorDefault: null = null;
+const noteListDefault: NoteListType = [ [[]] ];
 
 
-const MrtNoteGenerator = () => {
+const MrtNoteGenerator: React.FC = () => {
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [noteList, setNoteList] = useState(noteListDefault);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const [noteList, setNoteList] = useState<NoteListType>(noteListDefault);
+  const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   // Cursor represents where we are inserting things
   // null: everything appended to the end of the note
@@ -53,20 +54,22 @@ const MrtNoteGenerator = () => {
   // pair (e.g. [0,3]): a cell is selected. First number is row, second number is cell. The row header is 0,0
   //    and 0,1 is the first entry in a row. Replaces the selected cell.
   //    A row can be added above or below according to command center
-  const [cursor, setCursor] = useState(cursorDefault)
-  const [insertBehavior, setInsertBehavior] = useState("right");
+  const [cursor, setCursor] = useState<CursorTypes>(cursorDefault);
+  const [insertBehavior, setInsertBehavior] = useState<InsertBehaviorTypes>("right");
 
   // Set up some helper variables
-  const activeNote = noteList[activeTab];
+  const activeNote: NoteType = noteList[activeTab];
 
 
-  const updateNote = (mode, newContent = null, extraInput = null) => {
+  const updateNote = (mode: UpdateNoteModeTypes, newContent: UpdateNoteNewContent = null, extraInput: UpdateNoteExtraInput = null) => {
     let newNoteList = [ ...noteList ];
-    let output = null;
+    let output: UpdateNoteOutputType | null = null;
 
     if (mode === "insertElement") { // extraInput should be focusNewElement boolean
-      if (newContent === null)
+      if (newContent === null) {
         console.log("updateNote(\"insertElement\", newContent) requires an element");
+        return;
+      }
       const options = { insertBehavior: insertBehavior };
       output = noteAddElement(newContent, cursor, activeNote, options, extraInput ?? true);
     } else if (mode === "insertRow") { // extraInput should be rowInsertDirection "primary"||"up"||"down"
@@ -123,7 +126,7 @@ const MrtNoteGenerator = () => {
     }, 6000);
   };
 
-  const setActiveTabHelper = (newActiveTab) => {
+  const setActiveTabHelper = (newActiveTab: number) => {
     if (newActiveTab === activeTab)
       return;
     setActiveTab(newActiveTab);
@@ -135,16 +138,15 @@ const MrtNoteGenerator = () => {
     <div className={styles.mrtNoteGenerator}>
       <div className={styles.primaryNoteGenerator}>
         <div className={styles.raiderList}>
-          <PlayerList role="dps" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
-          <PlayerList role="tank" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
-          <PlayerList role="healer" playerList={playerList} addElementToNote={(element) => updateNote("insertElement", element)} />
+          <PlayerList role="dps" playerList={playerList} addElementToNote={(element: NoteElementDataTypes) => updateNote("insertElement", element)} />
+          <PlayerList role="tank" playerList={playerList} addElementToNote={(element: NoteElementDataTypes) => updateNote("insertElement", element)} />
+          <PlayerList role="healer" playerList={playerList} addElementToNote={(element: NoteElementDataTypes) => updateNote("insertElement", element)} />
         </div>
 
         <Note
           noteList={noteList}
           activeTab={activeTab}
           setActiveTab={setActiveTabHelper}
-          noteBody={activeNote}
           cursor={cursor}
           setCursor={setCursor}
           updateNote={updateNote}
@@ -158,8 +160,8 @@ const MrtNoteGenerator = () => {
         cursor={cursor}
         insertBehavior={insertBehavior}
         setInsertBehavior={setInsertBehavior}
-        insertNewRow={(rowInsertDirection) => updateNote("insertRow", null, rowInsertDirection)}
-        addElement={(element) => updateNote("insertElement", element)}
+        insertNewRow={(rowInsertDirection: RowInsertDirectionTypes) => updateNote("insertRow", null, rowInsertDirection)}
+        addElement={(element: NoteElementDataTypes) => updateNote("insertElement", element)}
         deleteElement={() => updateNote("deleteElement")}
         exportNote={() => { exportNote(activeNote); showCopiedTooltip(); }}
         tooltipVisible={tooltipVisible}
