@@ -1,11 +1,12 @@
 export type WarcraftClasses = "death_knight" | "demon_hunter" |
   "druid" | "evoker" | "hunter" | "mage" | "monk" | "paladin" |
   "priest" | "rogue" | "shaman" | "warlock" | "warrior";
+export type WarcraftRoles = "dps" | "tank" | "healer";
 
 export interface PlayerData {
   name: string;
   class: WarcraftClasses;
-  role: "dps" | "tank" | "healer";
+  role: WarcraftRoles;
   type: "player";
 };
 

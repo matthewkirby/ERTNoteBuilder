@@ -1,3 +1,4 @@
+import { NoteElementDataTypes, PlayerData, WarcraftRoles } from "types/commonTypes";
 import styles from "../css/PlayerList.module.css";
 import Player from "./Player";
 
@@ -5,9 +6,15 @@ const roleLookup = {
   "dps": "DPS",
   "tank": "Tanks",
   "healer": "Healers"
-}
+};
 
-const PlayerList = ({ role, playerList, addElementToNote }) => {
+interface PlayerListProps {
+  role: WarcraftRoles;
+  playerList: PlayerData[];
+  addElementToNote: (element: NoteElementDataTypes) => void;
+};
+
+const PlayerList: React.FC<PlayerListProps> = ({ role, playerList, addElementToNote }) => {
   const subList = playerList.filter((player) => player.role === role);
 
   return (
@@ -17,8 +24,9 @@ const PlayerList = ({ role, playerList, addElementToNote }) => {
         return (
           <Player
             playerInfo={player}
-            key={player.name}
+            focus={false}
             onClick={addElementToNote}
+            key={player.name}
           />
         );
       })}
