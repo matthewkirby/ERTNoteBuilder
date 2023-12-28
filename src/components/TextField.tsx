@@ -2,9 +2,6 @@ import styles from "css/TextField.module.css";
 import React from "react";
 import { getTextWidth } from "utils/formatting";
 
-// When I click to add a new row at the top, a text field is getting selected
-// Handle max width to prevent clipping out of app
-
  interface TextFieldProps {
     content: string;
     onClick: () => void;
