@@ -1,8 +1,8 @@
+import styles from "css/TabBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "../css/TabBar.module.css";
 import { faPlay, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { maxNoteTabs, validateChangeTab } from "../utils";
-
+import { maxNoteTabs } from "utils/constants";
+import { validateChangeTab } from "utils/validation";
 
 const TabBar = ({ nTabs, activeTab, setActiveTab, addNoteTab, deleteNoteTab }) => {
 

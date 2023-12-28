@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "../../css/Buttons/CompositeActionButton.module.css";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import styles from "css/Buttons/CompositeActionButton.module.css";
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { RowInsertDirectionTypes } from "types/commonTypes";
 
 // This component is a button with two buttons on the right that act as two

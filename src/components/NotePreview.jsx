@@ -1,4 +1,4 @@
-import styles from "../css/NotePreview.module.css";
+import styles from "css/NotePreview.module.css";
 import Player from "./Player";
 import TextField from "./TextField";
 

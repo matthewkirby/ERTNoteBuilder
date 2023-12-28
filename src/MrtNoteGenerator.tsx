@@ -2,10 +2,12 @@ import styles from "css/MrtNoteGenerator.module.css";
 import React, { useState } from 'react';
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
-import { exportNote, maxNoteTabs, validateChangeTab } from "./utils";
-import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "./noteUtils";
+import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "utils/noteUtils";
 import Note from "./components/Note";
 import { CursorTypes, InsertBehaviorTypes, NoteElementDataTypes, NoteListType, NoteType, PlayerData, RowInsertDirectionTypes, UpdateNoteExtraInput, UpdateNoteModeTypes, UpdateNoteNewContent, UpdateNoteOutputType } from "types/commonTypes";
+import { maxNoteTabs } from "utils/constants";
+import { validateChangeTab } from "utils/validation";
+import { exportNote } from "utils/helpers";
 
 const playerList: PlayerData[] = [
   { name: "Nidwhal", class: "mage", role: "dps", type: "player" },

@@ -1,5 +1,5 @@
+import styles from "css/Player.module.css";
 import { NoteElementDataTypes, PlayerData } from "types/commonTypes";
-import styles from "../css/Player.module.css";
 import React from "react";
 
 interface PlayerProps {

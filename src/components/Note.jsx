@@ -1,4 +1,4 @@
-import styles from "../css/Note.module.css";
+import styles from "css/Note.module.css";
 import NotePreview from "./NotePreview";
 import TabBar from "./TabBar";
 

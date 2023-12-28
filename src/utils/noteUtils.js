@@ -1,4 +1,5 @@
-import { baselineTextElement, isCursorValid } from "./utils";
+import { baselineTextElement } from "./constants";
+import { isCursorValid } from "./validation";
 
 const prepareOutput = (noteBody, cursor) => {
   return { noteBody: noteBody, updateNote: true, cursor: cursor, updateCursor: false };

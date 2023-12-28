@@ -1,5 +1,5 @@
+import styles from "css/PlayerList.module.css";
 import { NoteElementDataTypes, PlayerData, WarcraftRoles } from "types/commonTypes";
-import styles from "../css/PlayerList.module.css";
 import Player from "./Player";
 
 const roleLookup = {

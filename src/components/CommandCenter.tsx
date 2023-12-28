@@ -1,10 +1,10 @@
-import styles from "../css/CommandCenter.module.css";
+import styles from "css/CommandCenter.module.css";
+import React, { SetStateAction } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClone, faPlay, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { baselineTextElement } from "../utils";
 import { CompositeActionButton, TriStateSwitch } from "./Buttons";
 import { CursorTypes, InsertBehaviorTypes, NoteElementDataTypes, RowInsertDirectionTypes } from "types/commonTypes";
-import React, { SetStateAction } from "react";
+import { baselineTextElement } from "utils/constants";
 
 
 // Triple button with insertLeft/Replace/insertRight buttons

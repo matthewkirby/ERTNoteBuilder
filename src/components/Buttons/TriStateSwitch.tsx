@@ -1,5 +1,5 @@
+import styles from "css/Buttons/TriStateSwitch.module.css";
 import React, { SetStateAction } from "react";
-import styles from "../../css/Buttons/TriStateSwitch.module.css";
 import { InsertBehaviorTypes } from "types/commonTypes";
 
 // These types are bad. I don't want to spend too much time on this right now though
