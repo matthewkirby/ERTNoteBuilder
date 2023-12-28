@@ -1,3 +1,5 @@
+import React from "react";
+
 export type WarcraftClasses = "death_knight" | "demon_hunter" |
   "druid" | "evoker" | "hunter" | "mage" | "monk" | "paladin" |
   "priest" | "rogue" | "shaman" | "warlock" | "warrior";
@@ -16,6 +18,7 @@ export interface TextFieldData {
 };
 
 export type CursorTypes = null | number | [number, number];
+export type SetCursorType = React.Dispatch<React.SetStateAction<CursorTypes>>;
 export type InsertBehaviorTypes = "left" | "replace" | "right";
 export type RowInsertDirectionTypes = "primary" | "up" | "down";
 
@@ -31,7 +34,7 @@ export type FixMyTypeLater = any;
 export type UpdateNoteModeTypes = "insertElement" | "insertRow" |
  "deleteElement" | "updateTextField";
  export type UpdateNoteExtraInput = any;
-export type UpdateNoteNewContent = NoteElementDataTypes | null;
+export type UpdateNoteNewContent = NoteElementDataTypes | string | null;
 export interface UpdateNoteOutputType {
   noteBody: NoteType;
   updateNote: boolean;

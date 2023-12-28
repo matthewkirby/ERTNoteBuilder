@@ -3,8 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { maxNoteTabs } from "utils/constants";
 import { validateChangeTab } from "utils/validation";
+import React, { PropsWithChildren } from "react";
 
-const TabBar = ({ nTabs, activeTab, setActiveTab, addNoteTab, deleteNoteTab }) => {
+interface TabBarProps {
+  nTabs: number;
+  activeTab: number;
+  setActiveTab: (newActiveTab: number) => void;
+  addNoteTab: () => void;
+  deleteNoteTab: () => void;
+};
+
+const TabBar: React.FC<TabBarProps> = ({ nTabs, activeTab, setActiveTab, addNoteTab, deleteNoteTab }) => {
 
   // Helpers for classes
   const isLeftDisabled = activeTab === 0;
@@ -38,7 +47,15 @@ const TabBar = ({ nTabs, activeTab, setActiveTab, addNoteTab, deleteNoteTab }) =
   );
 };
 
-const TabBarButton = ({ isDisabled = false, className = "", onClick, children }) => {
+
+interface TabBarButtonProps {
+  isDisabled?: boolean;
+  className?: string;
+  onClick: () => void;
+};
+
+const TabBarButton: React.FC<PropsWithChildren<TabBarButtonProps>> =
+  ({ isDisabled = false, className = "", onClick, children }) => {
   return (
     <div
       className={[className, styles.tabButton, isDisabled ? styles.disabled : ""].join(' ')}

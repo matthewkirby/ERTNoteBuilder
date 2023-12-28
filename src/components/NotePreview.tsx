@@ -1,11 +1,20 @@
 import styles from "css/NotePreview.module.css";
 import Player from "./Player";
 import TextField from "./TextField";
+import React from "react";
+import { CursorTypes, NoteRowType, NoteType, SetCursorType } from "types/commonTypes";
 
+interface NotePreviewProps {
+  contents: NoteType;
+  cursor: CursorTypes;
+  setCursor: SetCursorType;
+  onChangeTextField: (newValue: string) => void;
+};
 
-const NotePreview = ({ contents, cursor, setCursor, onChangeTextField }) => {
-
-  if (contents === null) { return <div className={styles.notePreview} style={{padding:"1em"}}>Get Started</div>}
+const NotePreview: React.FC<NotePreviewProps> = ({ contents, cursor, setCursor, onChangeTextField }) => {
+  if (contents === null) {
+    return <div className={styles.notePreview} style={{padding:"1em"}}>Get Started</div>
+  }
 
   return (
     <div className={styles.notePreview} onClick={(e) => setCursor(null)}>
@@ -21,20 +30,28 @@ const NotePreview = ({ contents, cursor, setCursor, onChangeTextField }) => {
       })}
     </div>
   );
-
-
 };
 
-const NoteRow = ({ row, rowNumber, cursor, setCursor, onChangeTextField }) => {
+
+
+interface NoteRowProps {
+  row: NoteRowType;
+  rowNumber: number;
+  cursor: CursorTypes;
+  setCursor: SetCursorType;
+  onChangeTextField: (newValue: string) => void;
+};
+
+const NoteRow: React.FC<NoteRowProps> = ({ row, rowNumber, cursor, setCursor, onChangeTextField }) => {
 
   const cursorIsCell = Array.isArray(cursor);
   const rowFocusedHelper = cursor === rowNumber;
-  const cellFocusedHelper = (cellIndex) => {
+  const cellFocusedHelper = (cellIndex: number) => {
     if (cursorIsCell && cursor[0] === rowNumber && cursor[1] === cellIndex+1) return true;
     else return false;
   };
 
-  const handleCellCursorAssignmentClicks = (cellIndex) => {
+  const handleCellCursorAssignmentClicks = (cellIndex: number) => {
     if (cellFocusedHelper(cellIndex)) {
       setCursor(rowNumber);
     } else {
