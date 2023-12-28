@@ -17,12 +17,12 @@ interface CompositeActionButtonProps {
 
 const CompositeActionButton: React.FC<CompositeActionButtonProps> = ({ textPrimary, onClick, className, childClassName }) => {
   return (
-    <div className={[className, styles.bwtmContainer].join(' ')}>
-      <div className={[styles.bwtm, styles.bwtmPrimary, childClassName].join(' ')} onClick={() => onClick("primary")} >{textPrimary}</div>
-      <div className={[styles.bwtm, styles.bwtmUp, childClassName].join(' ')} onClick={() => onClick("up")} >
+    <div className={[className, styles.cabContainer].join(' ')}>
+      <div className={[styles.cabPrimary, childClassName].join(' ')} onClick={() => onClick("primary")} >{textPrimary}</div>
+      <div className={[styles.cabUp, childClassName].join(' ')} onClick={() => onClick("up")} >
         <FontAwesomeIcon icon={faPlay} size="sm" rotation={270} />
       </div>
-      <div className={[styles.bwtm, styles.bwtmDown, childClassName].join(' ')} onClick={() => onClick("down")} >
+      <div className={[styles.cabDown, childClassName].join(' ')} onClick={() => onClick("down")} >
         <FontAwesomeIcon icon={faPlay} size="sm" rotation={90} />
       </div>
     </div>
