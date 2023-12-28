@@ -11,7 +11,8 @@ export interface PlayerData {
 };
 
 export interface TextFieldData {
-
+  content: string;
+  type: "text";
 };
 
 export type CursorTypes = null | number | [number, number];

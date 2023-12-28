@@ -1,11 +1,13 @@
+import { CursorTypes, NoteType, PlayerData, TextFieldData, WarcraftClasses } from "types/commonTypes";
+
 const maxNoteTabs = 10;
 
-const baselineTextElement = {
+const baselineTextElement: TextFieldData = {
   type: "text",
   content: "Text Field"
 }
 
-const classColors = {
+const classColors: { [K in WarcraftClasses]: string } = {
   death_knight:"C41E3A",
   demon_hunter:"A330C9",
   druid:"FF7C0A",
@@ -21,21 +23,22 @@ const classColors = {
   warrior:"C69B6D"
 }
 
-function formatPlayerName(playerInfo) {
+function formatPlayerName(playerInfo: PlayerData): string {
   const coloredName = `|cff${classColors[playerInfo.class]}${playerInfo.name}|r`;
   return coloredName;
 }
 
-function exportNote(noteBody) {
+function exportNote(noteBody: NoteType): void {
   if (noteBody === null) { return; }
   let noteString = "";
 
   for (let i = 0; i < noteBody.length; i++) {
     for (let j = 0; j < noteBody[i].length; j++) {
-      if (noteBody[i][j].type === "player") {
-        noteString += `${formatPlayerName(noteBody[i][j])} `
-      } else if (noteBody[i][j].type === "text") {
-        noteString += `${noteBody[i][j].content} `
+      const noteElement = noteBody[i][j];
+      if (noteElement.type === "player") {
+        noteString += `${formatPlayerName(noteElement)} `
+      } else if (noteElement.type === "text") {
+        noteString += `${noteElement.content} `
       }
     }
     noteString = noteString.trimEnd();
@@ -49,17 +52,18 @@ function exportNote(noteBody) {
   navigator.clipboard.writeText(noteString);
 }
 
-function getTextWidth(inputText, fontString) {
+function getTextWidth(inputText: string, fontString: string): string {
   // font should be in "#units name" format
   const canvas = document.createElement("canvas");
   let context = canvas.getContext("2d");
+  if (context === null) { return "50px"; }
   context.font = fontString;
   const width = context.measureText(inputText).width;
   const formattedWidth = Math.ceil(width) + "px";
   return formattedWidth;
 }
 
-function isCursorValid(cursor, noteBody) {
+function isCursorValid(cursor: CursorTypes, noteBody: NoteType): boolean {
   if (typeof cursor === 'number') {
     if (cursor > noteBody.length - 1 || cursor < 0) return false;
   } else if (Array.isArray(cursor)) {
@@ -70,7 +74,7 @@ function isCursorValid(cursor, noteBody) {
   return true;
 }
 
-const validateChangeTab = (proposedTab, nTabs) => {
+const validateChangeTab = (proposedTab: number, nTabs: number): number => {
   let newTab = proposedTab;
   if (proposedTab < 0)
     newTab = 0;
