@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PlayerList from "./components/PlayerList";
 import CommandCenter from "./components/CommandCenter";
 import { noteAddElement, noteAddRow, noteDeleteElement, noteUpdateTextField } from "utils/noteUtils";
+import * as su from "utils/stateUtils"
 import Note from "./components/Note";
 import { CursorTypes, InsertBehaviorTypes, NoteElementDataTypes, NoteListType, NoteType, PlayerData, RowInsertDirectionTypes, UpdateNoteExtraInput, UpdateNoteModeTypes, UpdateNoteNewContent, UpdateNoteOutputType } from "types/commonTypes";
 import { maxNoteTabs } from "utils/constants";
@@ -41,14 +42,15 @@ const playerList: PlayerData[] = [
   { name: "Cutelockxd", class: "warlock", role: "dps", type: "player" },
 ];
 
+// Set default state values
 const cursorDefault: null = null;
-const noteListDefault: NoteListType = [ [[]] ];
+
 
 
 const MrtNoteGenerator: React.FC = () => {
 
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const [noteList, setNoteList] = useState<NoteListType>(noteListDefault);
+  const [activeTab, setActiveTab] = useState<number>(su.getActiveTab());
+  const [noteList, setNoteList] = useState<NoteListType>(su.getNoteList());
   const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   // Cursor represents where we are inserting things
@@ -59,7 +61,12 @@ const MrtNoteGenerator: React.FC = () => {
   //    and 0,1 is the first entry in a row. Replaces the selected cell.
   //    A row can be added above or below according to command center
   const [cursor, setCursor] = useState<CursorTypes>(cursorDefault);
-  const [insertBehavior, setInsertBehavior] = useState<InsertBehaviorTypes>("right");
+  const [insertBehavior, setInsertBehavior] = useState<InsertBehaviorTypes>(su.getInsertBehavior());
+
+  // Set up localStorage tracking for some states
+  su.useLocalStorage("activeTab", activeTab);
+  su.useLocalStorage("noteList", noteList);
+  su.useLocalStorage("insertBehavior", insertBehavior);
 
   // Set up some helper variables
   const activeNote: NoteType = noteList[activeTab];
@@ -114,7 +121,7 @@ const MrtNoteGenerator: React.FC = () => {
     let newNoteList = [ ...noteList ];
     newNoteList.splice(activeTab, 1);
     if(newNoteList.length === 0) {
-      newNoteList = noteListDefault;
+      newNoteList = su.defaultStates.noteListDefault;
     }
     setNoteList(newNoteList);
     setCursor(cursorDefault);
